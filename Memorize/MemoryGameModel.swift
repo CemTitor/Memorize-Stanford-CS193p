@@ -1,5 +1,5 @@
 //
-//  MemoryGame.swift
+//  MemoryGameModel.swift
 //  Memorize
 //
 //  Created by Cem Yılmaz on 22.02.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MemoryGame<CardContent> where  CardContent: Equatable{
+struct MemoryGameModel<CardContent> where  CardContent: Equatable{
     /// Only setting this variable is private, getting is allowed(not private)
     private (set) var cards: Array<Card>
     
@@ -44,16 +44,6 @@ struct MemoryGame<CardContent> where  CardContent: Equatable{
         }
     }
     
-    /// index methodunu kullanmak yerine yukarıda array'in zaten sahio olduğu firstIndex() methodunu kullandık
-    //    private func index(of card: Card) -> Int? {
-    //        for index in cards.indices {
-    //            if cards[index].id == card.id {
-    //                return index
-    //            }
-    //        }
-    //        return nil
-    //    }
-    
     mutating func shuffle() {
         cards.shuffle()
         print(cards)
@@ -65,7 +55,7 @@ struct MemoryGame<CardContent> where  CardContent: Equatable{
         let content: CardContent
         
         var id: String
-        /// CustomDebugStringConvertible conform ederek  printte aldığımız çıktıdaki texti daha düzgün yazarız.
+        /// CustomDebugStringConvertible conform etme amacımız printte aldığımız çıktıdaki texti daha düzgün yazmak.
         var debugDescription: String {
             "\(id): \(content) \(isFaceUp ? "up" : "down") \(isMatched ? "matched" : "")"
         }

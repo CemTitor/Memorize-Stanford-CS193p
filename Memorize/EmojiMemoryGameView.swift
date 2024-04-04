@@ -8,25 +8,9 @@
 import SwiftUI
 
 struct EmojiMemoryGameView: View {
-    /// Eğer bir şey değişiyorsa, beni yeniden çiz
-    @ObservedObject var viewModel: EmojiMemoryGame
-    
-    let emojis: Array<String> = ["🐻","🐱","🐤","🦊","🐸","🐸","🐸","🐸","🐸","🐸","🐸","🐸"]
-
-//    let theme1: Array<String> = ["🐻","🐱","🐤","🦊","🐸","🐸","🐸","🐸","🐸","🐸","🐸","🐸"]
-//    let theme2: [String] = ["😆","😆","😆","😆","😆","😆","😆","😆","😆","😆","😆","😆",]
-//    let theme3 = ["🚑","🛵","✈️","🚘","🛳️","🛳️","🛳️","🛳️","🛳️","🛳️","🛳️","🛳️","🛳️","🛳️"]
-    
-//    @State private var choosenTheme: [String]
-//    @State private var choosenColor: Color
-//    @State private var randomCardnumber: Int
-//
-//    init() {
-//        _choosenTheme = State(initialValue: theme1)
-//        _choosenColor = State(initialValue: .orange)
-//        _randomCardnumber = State(initialValue: 3)
-//    }
-    
+    /// ObservedObject amacı: Eğer bir şey değişiyorsa, beni yeniden çiz
+    @ObservedObject var viewModel: EmojiMemoryGameViewModel
+        
     var body: some View {
         VStack{
             Text("Memorize!")
@@ -39,7 +23,9 @@ struct EmojiMemoryGameView: View {
                 viewModel.shuffle()
             }
             Spacer()
-//            cardCountAdjusters
+            Button("New Game") {
+                viewModel.newGame()
+            }
         }
         .foregroundColor(.orange)
         .padding()
@@ -59,57 +45,14 @@ struct EmojiMemoryGameView: View {
                 })
             }
         }
-//        .foregroundColor(choosenColor)
     }
-    
-//    func cardCountAdjuster(by theme: [String], symbol: String, title: String, color: Color) -> some View {
-//        VStack {
-//            Text(title)
-//                .font(.caption)
-//                .foregroundColor(color)
-//            Button(action: {
-//                choosenTheme = theme.shuffled()
-//                choosenColor = color
-//                randomCardnumber = Int.random(in: 2...10)
-//            }, label: {
-//                Image(systemName: symbol)
-//                    .imageScale(.large)
-//                    .foregroundColor(color)
-//                
-//            })
-//        }
-//    }
-//
-//    
-//    var cardCountAdjusters: some View {
-//        HStack {
-//            themeButton
-//            themeButton2
-//            themeButton3
-//        }
-//        .imageScale(.large)
-//        .font(.largeTitle)
-//        .fixedSize(horizontal: true, vertical: true)
-//    }
-//    
-//    var themeButton: some View {
-//        cardCountAdjuster(by: theme1, symbol: "pawprint", title: "Animals", color: .orange)
-//    }
-//    
-//    var themeButton2: some View {
-//        cardCountAdjuster(by: theme2, symbol: "smiley", title: "Smileys", color: .blue)
-//    }
-//    
-//    var themeButton3: some View {
-//        cardCountAdjuster(by: theme3, symbol: "bus", title: "Vehicles", color: .red)
-//    }
 
 }
 
 struct CardView: View {
-    let card: MemoryGame<String>.Card
+    let card: MemoryGameModel<String>.Card
     
-    init(_ card: MemoryGame<String>.Card) {
+    init(_ card: MemoryGameModel<String>.Card) {
         self.card = card
     }
     
@@ -132,7 +75,5 @@ struct CardView: View {
 }
 
 #Preview {
-    EmojiMemoryGameView(viewModel: EmojiMemoryGame())
+    EmojiMemoryGameView(viewModel: EmojiMemoryGameViewModel())
 }
-
-
