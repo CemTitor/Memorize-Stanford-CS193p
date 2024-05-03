@@ -53,8 +53,8 @@ struct MemoryGameModel<CardContent> where  CardContent: Equatable{
         var isFaceUp = false
         var isMatched: Bool = false
         let content: CardContent
-        
         var id: String
+        
         /// CustomDebugStringConvertible conform etme amacımız printte aldığımız çıktıdaki texti daha düzgün yazmak.
         var debugDescription: String {
             "\(id): \(content) \(isFaceUp ? "up" : "down") \(isMatched ? "matched" : "")"

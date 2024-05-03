@@ -26,8 +26,10 @@ class EmojiMemoryGameViewModel: ObservableObject {
     @Published var themeColor: Color
     @Published var themeName: String
     
+    typealias Card = MemoryGameModel<String>.Card
+    
     // MARK: - Computed Properties
-    var cards: Array<MemoryGameModel<String>.Card> {
+    var cards: Array<Card> {
         return model.cards
     }
     
