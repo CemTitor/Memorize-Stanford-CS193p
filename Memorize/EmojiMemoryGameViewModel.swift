@@ -33,6 +33,10 @@ class EmojiMemoryGameViewModel: ObservableObject {
         return model.cards
     }
     
+    var score: Int {
+        model.score
+    }
+    
     // MARK: - Initialization
     init() {
         let theme = EmojiMemoryGameViewModel.themes.randomElement()!

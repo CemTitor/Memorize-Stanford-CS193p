@@ -10,6 +10,7 @@ import Foundation
 struct MemoryGameModel<CardContent> where  CardContent: Equatable{
     /// Only setting this variable is private, getting is allowed(not private)
     private (set) var cards: Array<Card>
+    private (set) var score = 0
     
     init(numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
         cards = []
@@ -25,21 +26,26 @@ struct MemoryGameModel<CardContent> where  CardContent: Equatable{
         set { cards.indices.forEach { cards[$0].isFaceUp = (newValue == $0) } }
     }
     
-    mutating func choose(_ card: Card){
-        //        if let choosenIndex = index(of: card) {
-        if let choosenIndex = cards.firstIndex(where: { $0.id == card.id }) {
-            if !cards[choosenIndex].isFaceUp && !cards[choosenIndex].isMatched {
-                if let potantialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
-                    if cards[choosenIndex].content == cards[potantialMatchIndex].content {
-                        cards[choosenIndex].isMatched = true
-                        cards[potantialMatchIndex].isMatched = true
+    mutating func choose(_ card: Card) {
+        if let chosenIndex = cards.firstIndex(where: { $0.id == card.id }) {
+            if !cards[chosenIndex].isFaceUp && !cards[chosenIndex].isMatched {
+                if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
+                    if cards[chosenIndex].content == cards[potentialMatchIndex].content {
+                        cards[chosenIndex].isMatched = true
+                        cards[potentialMatchIndex].isMatched = true
+                        score += 2
+                    } else {
+                        if cards[chosenIndex].hasBeenSeen {
+                            score -= 1
+                        }
+                        if cards[potentialMatchIndex].hasBeenSeen {
+                            score -= 1
+                        }
                     }
                 } else {
-                    indexOfTheOneAndOnlyFaceUpCard = choosenIndex
+                    indexOfTheOneAndOnlyFaceUpCard = chosenIndex
                 }
-                cards[choosenIndex].isFaceUp = true
-                ///Cannot use mutating member on immutable value: parameter 'card' is a 'let' constant, so we are going to use cards[index] justlike above
-                //        card.isFaceUp.toggle() //
+                cards[chosenIndex].isFaceUp = true
             }
         }
     }
@@ -50,7 +56,14 @@ struct MemoryGameModel<CardContent> where  CardContent: Equatable{
     }
     
     struct Card: Equatable, Identifiable, CustomDebugStringConvertible {
-        var isFaceUp = false
+        var isFaceUp = false {
+            didSet {
+                if oldValue && !isFaceUp {
+                    hasBeenSeen = true
+                }
+            }
+        }
+        var hasBeenSeen = false
         var isMatched: Bool = false
         let content: CardContent
         var id: String
