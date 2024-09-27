@@ -87,6 +87,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3253F8622CA75444000A457F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				32E1A5632B8789F3005879A0 /* MemoryGameModel.swift */,
+				3296A7032BBECFB8001B9B58 /* Theme.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		3253F8632CA7544A000A457F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				32576ABF2B7E09EB0094D493 /* EmojiMemoryGameView.swift */,
+				323091BB2BE3AA6000858944 /* CardView.swift */,
+				324210F22BE508A40005AEE6 /* FlyingNumber.swift */,
+				323091B92BE39F5500858944 /* AspectVGrid.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3253F8642CA75453000A457F /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				32E1A5652B878A21005879A0 /* EmojiMemoryGameViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		3253F8652CA75460000A457F /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				323091BF2BE3AF6700858944 /* Cardify.swift */,
+				323091BD2BE3AB1100858944 /* Pie.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		32576AB12B7E09EB0094D493 = {
 			isa = PBXGroup;
 			children = (
@@ -110,16 +147,11 @@
 		32576ABC2B7E09EB0094D493 /* Memorize */ = {
 			isa = PBXGroup;
 			children = (
-				323091B92BE39F5500858944 /* AspectVGrid.swift */,
-				323091BB2BE3AA6000858944 /* CardView.swift */,
-				323091BF2BE3AF6700858944 /* Cardify.swift */,
 				32576ABD2B7E09EB0094D493 /* MemorizeApp.swift */,
-				32E1A5632B8789F3005879A0 /* MemoryGameModel.swift */,
-				32E1A5652B878A21005879A0 /* EmojiMemoryGameViewModel.swift */,
-				32576ABF2B7E09EB0094D493 /* EmojiMemoryGameView.swift */,
-				3296A7032BBECFB8001B9B58 /* Theme.swift */,
-				324210F22BE508A40005AEE6 /* FlyingNumber.swift */,
-				323091BD2BE3AB1100858944 /* Pie.swift */,
+				3253F8622CA75444000A457F /* Models */,
+				3253F8632CA7544A000A457F /* Views */,
+				3253F8642CA75453000A457F /* ViewModels */,
+				3253F8652CA75460000A457F /* Helpers */,
 				32576AC12B7E09EC0094D493 /* Assets.xcassets */,
 				32576AC32B7E09EC0094D493 /* Preview Content */,
 			);
