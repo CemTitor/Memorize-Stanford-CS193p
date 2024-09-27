@@ -10,6 +10,8 @@ import SwiftUI
 
 class EmojiMemoryGameViewModel: ObservableObject {
     
+    typealias Card = MemoryGameModel<String>.Card
+    
     // MARK: - Static Properties
     /// static keyword koyarak themes degiskenini global yaparız. Neden global yapmak istiyoruz çünkü alttaki "model" property initinde themes kullanılamıyor çünkü themes "model"den sonra setleniyor. Yani themes' i kullanmadan önce initialize etmiş oluyorum.
     private static let themes: [Theme] = [
@@ -20,37 +22,46 @@ class EmojiMemoryGameViewModel: ObservableObject {
         Theme(name: "Weather", emojis: ["☀️", "🌤", "⛅️", "🌥", "☁️", "🌦", "🌧", "⛈", "🌩", "🌨"], numberOfPairs: 4, color: .gray),
         Theme(name: "Faces", emojis: ["😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇"], numberOfPairs: 5, color: .pink)
     ]
+    
+    
     // MARK: - Published Properties
     /// Published: Eğer bu variable değişirse, bir şeyin değiştiğini belirtecek
     @Published private var model: MemoryGameModel<String>
-    @Published var themeColor: Color
-    @Published var themeName: String
+    @Published private var currentTheme: Theme
     
-    typealias Card = MemoryGameModel<String>.Card
-    
+    // MARK: - Initializer
+     init() {
+         let initialTheme = EmojiMemoryGameViewModel.themes.randomElement()!
+         self.currentTheme = initialTheme
+         self.model = EmojiMemoryGameViewModel.createMemoryGame(theme: initialTheme)
+     }
+
     // MARK: - Computed Properties
-    var cards: Array<Card> {
-        return model.cards
-    }
-    
-    var score: Int {
-        model.score
-    }
-    
-    // MARK: - Initialization
-    init() {
-        let theme = EmojiMemoryGameViewModel.themes.randomElement()!
-        self.themeName = theme.name
-        self.themeColor = theme.color
-        self.model = EmojiMemoryGameViewModel.createMemoryGame(theme: theme)
-        model.shuffle()
-    }
+    var cards: [Card] {
+         model.cards
+     }
+     
+     var score: Int {
+         model.score
+     }
+     
+     var themeName: String {
+         currentTheme.name
+     }
+     
+     var themeColor: Color {
+         currentTheme.color
+     }
     
     // MARK: - Methods
-    /// Temaya göre yeni bir `MemoryGame` oluşturur. cardContentFactory son parametre olduğu için closure syntax olarak yazdık
+    /// Temaya göre yeni bir `MemoryGameModel` oluşturur. cardContentFactory son parametre olduğu için closure syntax olarak yazdık
     private static func createMemoryGame(theme: Theme) -> MemoryGameModel<String> {
-        return MemoryGameModel<String>(numberOfPairsOfCards: theme.numberOfPairs) { pairIndex in
-            theme.emojis[pairIndex]
+        return MemoryGameModel(numberOfPairsOfCards: theme.numberOfPairs) { pairIndex in
+            if theme.emojis.indices.contains(pairIndex) {
+                return theme.emojis[pairIndex]
+            } else {
+                return "⁉️"
+            }
         }
     }
     
@@ -58,11 +69,14 @@ class EmojiMemoryGameViewModel: ObservableObject {
         model.shuffle()
     }
     
-    func newGame() {
-        let newTheme = EmojiMemoryGameViewModel.themes.randomElement()!
-        themeName = newTheme.name
-        themeColor = newTheme.color
-        model = EmojiMemoryGameViewModel.createMemoryGame(theme: newTheme)
+    func changeTheme() {
+        var newTheme: Theme
+        repeat {
+            newTheme = EmojiMemoryGameViewModel.themes.randomElement()!
+        } while newTheme.name == currentTheme.name
+        
+        currentTheme = newTheme
+        model = EmojiMemoryGameViewModel.createMemoryGame(theme: currentTheme)
         model.shuffle()
     }
     
