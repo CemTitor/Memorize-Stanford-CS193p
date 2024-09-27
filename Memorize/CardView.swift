@@ -4,34 +4,40 @@
 //
 //  Created by Cem Yılmaz on 2.05.2024.
 //
-import SwiftUI
 
-typealias Card = CardView.Card
+import SwiftUI
 
 struct CardView: View {
     typealias Card = MemoryGameModel<String>.Card
     let card: Card
     
-    init(_ card: MemoryGameModel<String>.Card) {
+    init(_ card: Card) {
         self.card = card
     }
     
     var body: some View {
-        Pie(endAngle: .degrees(240))
-            .opacity(Constants.Pie.opacity)
-            .overlay {
-                Text(card.content)
-                    .font(.system(size: Constants.FontSize.largest))
-                    .minimumScaleFactor(Constants.FontSize.scaleFactor)
-                    .multilineTextAlignment(.center)
-                    .aspectRatio(1, contentMode: .fit)
-                    .padding(Constants.Pie.inset)
-                    .rotationEffect(.degrees(card.isMatched ? 360 : 0))
-                    .animation(.spin(duration: 1), value: card.isMatched)
+        TimelineView(.animation) { timeline in
+            if card.isFaceUp || !card.isMatched {
+                Pie(endAngle: .degrees(card.bonusPercentRemaining * 360))
+                    .opacity(Constants.Pie.opacity)
+                    .overlay(cardContents.padding(Constants.Pie.inset))
+                    .padding(Constants.inset)
+                    .cardify(isFaceUp: card.isFaceUp)
+                    .transition(.scale)
+            } else {
+                Color.clear
             }
-            .padding(Constants.inset)
-            .cardify(isFaceUp: card.isFaceUp)
-            .opacity(card.isFaceUp || !card.isMatched ? 1 : 0)
+        }
+    }
+    
+    var cardContents: some View {
+        Text(card.content)
+            .font(.system(size: Constants.FontSize.largest))
+            .minimumScaleFactor(Constants.FontSize.scaleFactor)
+            .multilineTextAlignment(.center)
+            .aspectRatio(1, contentMode: .fit)
+            .rotationEffect(.degrees(card.isMatched ? 360 : 0))
+            .animation(.spin(duration: 1), value: card.isMatched)
     }
     
     private struct Constants {
@@ -42,7 +48,7 @@ struct CardView: View {
             static let scaleFactor = smallest / largest
         }
         struct Pie {
-            static let opacity: CGFloat = 0.4
+            static let opacity: CGFloat = 0.5
             static let inset: CGFloat = 5
         }
     }
@@ -54,17 +60,22 @@ extension Animation {
     }
 }
 
-#Preview {
-    VStack {
-        HStack {
-            CardView(Card(isFaceUp: true, content: "X", id: "test1"))
-            CardView(Card(content: "X", id: "test1"))
+struct CardView_Previews: PreviewProvider {
+    typealias Card = CardView.Card
+    
+    static var previews: some View {
+        VStack {
+            HStack {
+                CardView(Card(isFaceUp: true, content: "X", id: "test1"))
+                    .aspectRatio(4/3, contentMode: .fit)
+                CardView(Card(content: "X", id: "test1"))
+            }
+            HStack {
+                CardView(Card(isFaceUp: true, isMatched: true, content: "This is a very long string and I hope it fits", id: "test1"))
+                CardView(Card(isMatched: true, content: "X", id: "test1"))
+            }
         }
-        HStack {
-            CardView(Card(isFaceUp: true, content: "This is a very long string blah blah blah", id: "test1"))
-            CardView(Card(content: "X", id: "test1"))
-        }
+            .padding()
+            .foregroundColor(.green)
     }
-    .padding()
-    .foregroundColor(.blue)
 }
